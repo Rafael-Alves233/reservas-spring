@@ -16,6 +16,8 @@ public class ManipuladorGlobalDeExcecoes {
     public ResponseEntity<StandardError> tratarNaoEncontrado(RecursoNaoEncontradoException e, HttpServletRequest request){
         return montar(HttpStatus.NOT_FOUND,e.getMessage(),request);
     }
+
+    @ExceptionHandler(ConflitoDeEstadoException.class)
     public ResponseEntity<StandardError> tratarConflito(
             ConflitoDeEstadoException ex, HttpServletRequest request) {
         return montar(HttpStatus.CONFLICT, ex.getMessage(), request);
