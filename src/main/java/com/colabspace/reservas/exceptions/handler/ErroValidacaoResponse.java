@@ -7,7 +7,7 @@ public record ErroValidacaoResponse(
         LocalDateTime timestamp,
         Integer status,
         String erro,
-        String caminho,
+        String path,
         List<CampoInvalido> campos
 ) {
     public record CampoInvalido(String campo, String mensagem) {}

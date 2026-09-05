@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/salas")
+@RequestMapping(value = "/api/salas")
 public class SalaController {
 
     private final SalaService service;
@@ -59,7 +59,7 @@ public class SalaController {
 
     @PatchMapping(value = "/{id}/ativar")
     public ResponseEntity<SalaResponse> ativar(@PathVariable Long id){
-        SalaResponse response = service.inativar(id);
+        SalaResponse response = service.ativar(id);
         return ResponseEntity.ok(response);
     }
 
