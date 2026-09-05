@@ -37,7 +37,7 @@ public class SalaService {
     @Transactional(readOnly = true)
     public SalaResponse acharPorId(Long id){
         Sala sala = repository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException(id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sala nao encontrada", id));
         return SalaResponse.from(sala);
     }
 
@@ -49,7 +49,7 @@ public class SalaService {
 
     @Transactional
     public SalaResponse atualizar(Long id, SalaRequest salaRequest){
-        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException("Sala nao encontrada", id));
         if(repository.existsByNomeAndIdNot(salaRequest.nome(),id)){
             throw new ConflitoDeEstadoException("Ja existe uma sala com nome "+ salaRequest.nome());
         }
@@ -60,14 +60,14 @@ public class SalaService {
 
     @Transactional
     public SalaResponse inativar(Long id){
-        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException("Sala nao encontrada", id));
         entity.setAtiva(false);
         return SalaResponse.from(entity);
     }
 
     @Transactional
     public SalaResponse ativar(Long id){
-        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException("Sala nao encontrada", id));
         entity.setAtiva(true);
         return SalaResponse.from(entity);
     }

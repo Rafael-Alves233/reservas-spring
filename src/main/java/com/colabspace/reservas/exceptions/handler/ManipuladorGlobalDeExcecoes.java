@@ -72,7 +72,7 @@ public class ManipuladorGlobalDeExcecoes {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<StandardError> tratarIntegridade(DataIntegrityViolationException ex,
                                                            HttpServletRequest request){
-        return montar(HttpStatus.CONFLICT,"Operacao viola uma restricao de integridade de dados",request);
+        return montar(HttpStatus.CONFLICT,"Operacao viola uma restricao de integridade de dados ",request);
     }
 
     private ResponseEntity<StandardError> montar(HttpStatus status, String mensagem, HttpServletRequest request){
