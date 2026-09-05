@@ -10,14 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SalaService {
 
     private final SalaRepository repository;
-
+    @Transactional
     public SalaResponse criar(SalaRequest salaRequest){
 
 
@@ -39,5 +39,46 @@ public class SalaService {
         Sala sala = repository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(id));
         return SalaResponse.from(sala);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SalaResponse> acharTodas(){
+        List<Sala> salas = repository.findAll();
+        return salas.stream().map(SalaResponse::from).toList();
+    }
+
+    @Transactional
+    public SalaResponse atualizar(Long id, SalaRequest salaRequest){
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        if(repository.existsByNomeAndIdNot(salaRequest.nome(),id)){
+            throw new ConflitoDeEstadoException("Ja existe uma sala com nome "+ salaRequest.nome());
+        }
+        atualizarDados(entity,salaRequest);
+        return SalaResponse.from(entity);
+
+    }
+
+    @Transactional
+    public SalaResponse inativar(Long id){
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        entity.setAtiva(false);
+        return SalaResponse.from(entity);
+    }
+
+    @Transactional
+    public SalaResponse ativar(Long id){
+        Sala entity = repository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException(id));
+        entity.setAtiva(true);
+        return SalaResponse.from(entity);
+    }
+
+
+
+    private void atualizarDados(Sala sala, SalaRequest dto){
+        sala.setNome(dto.nome());
+        sala.setCapacidade(dto.capacidade());
+        sala.setAndar(dto.andar());
+        sala.getRecursos().clear();
+        sala.getRecursos().addAll(dto.recursos());
     }
 }
